@@ -1,0 +1,37 @@
+import speech_recognition as sr
+import pyttsx3
+
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+def listen():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = recognizer.listen(source)
+        try:
+            command = recognizer.recognize_google(audio)
+            print(f"You said: {command}")
+            return command.lower()
+        except sr.UnknownValueError:
+            print("Sorry, I did not understand that.")
+            return ""
+        except sr.RequestError:
+            print("Sorry, my speech service is down.")
+            return ""
+
+def main():
+    while True:
+        command = listen()
+        if 'hello' in command:
+            speak("Hello! How can I help you today?")
+        elif 'exit' in command:
+            speak("Goodbye!")
+            break
+        else:
+            speak("I can only respond to 'hello' or 'exit' commands right now.")
+
+if __name__ == "__main__":
+    main()
